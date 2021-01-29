@@ -1,43 +1,37 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 
-
-const useClick = (onClick) =>{
-
-  const element = useRef();
-
-  useEffect( () => {
-    if(element.current){
-      element.current.addEventListener("click", onClick);
-    }
-
-    return () => {
-      if(element.current){
-      element.current.removeEventListener("click", onClick);
-      }
-    };
-  }, [] );
-
-  if(typeof onClick !== "function"){
+const useConfirm = (message = "", callback ) =>{
+  if(typeof callback !=="fucntion"){
+    console.log("invalid type");
     return;
   }
 
+  const confirmAction = () =>{
+    console.log("prepare confirm");
+    if( window.confirm(message)){
 
-  return element;
+      console.log("confirm");
+      callback() ;
+    }else{
+      console.log("else");
+    }
 
-};
+  }
+  return confirmAction;
+}
+
 const App = () => {
 
-  const sayHello = () => console.log("say hello");
+  const deleteWorld = () => console.log("Delete the world");
+  const confirmDelete = useConfirm("Are you sure", deleteWorld);
 
-  const title= useClick(sayHello);
   return (
     <div className="App">
-      <h1 ref={title}>Hi</h1>
+      <button onClick = {confirmDelete}>Delete the world</button>
     </div>
   );
 };
 
 const rootElement = document.getElementById("root");
-
 ReactDOM.render(<App />, rootElement);
